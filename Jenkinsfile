@@ -93,22 +93,20 @@ pipeline {
             steps {
                 withCredentials([
                     usernamePassword(
-                        credentialsId: 'docker',
+                        credentialsId: 'dockerhub-credentials',
                         usernameVariable: 'DOCKER_USER',
                         passwordVariable: 'DOCKER_TOKEN'
                     )
                 ]) {
                     sh '''
-                        echo "$DOCKER_TOKEN" | docker login \
-                        -u "$DOCKER_USER" \
-                        --password-stdin
-
-                        docker push ${DOCKER_IMAGE}:${BUILD_NUMBER}
-                        docker push ${DOCKER_IMAGE}:latest
+                        echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push itsyogessh/swiggy-app:4
+                        docker push itsyogessh/swiggy-app:latest
                     '''
                 }
             }
         }
+
 
         stage('Trivy Image Scan') {
             steps {
