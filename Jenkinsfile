@@ -82,12 +82,12 @@ pipeline {
             steps {
                 sh '''
                     docker build \
-                    -t ${DOCKER_IMAGE}:${BUILD_NUMBER} \
-                    -t ${DOCKER_IMAGE}:latest \
-                    .
+                    -t itsyogessh/swiggy-app:${BUILD_NUMBER} \
+                    -t itsyogessh/swiggy-app:latest .
                 '''
             }
         }
+
 
         stage('DockerHub Push') {
             steps {
@@ -103,7 +103,6 @@ pipeline {
                 }
             }
         }
-
 
         stage('Trivy Image Scan') {
             steps {
