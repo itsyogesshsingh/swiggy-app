@@ -92,15 +92,12 @@ pipeline {
         stage('DockerHub Push') {
             steps {
                 withCredentials([
-                    usernamePassword(
-                        credentialsId: 'dockerhub-credentials',
-                        usernameVariable: 'DOCKER_USER',
-                        passwordVariable: 'DOCKER_TOKEN'
-                    )
+                    string(credentialsId: 'docker-token', variable: 'DOCKER_TOKEN')
                 ]) {
                     sh '''
-                        echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker push itsyogessh/swiggy-app:4
+                        echo "$DOCKER_TOKEN" | docker login -u itsyogessh --password-stdin
+
+                        docker push itsyogessh/swiggy-app:${BUILD_NUMBER}
                         docker push itsyogessh/swiggy-app:latest
                     '''
                 }
