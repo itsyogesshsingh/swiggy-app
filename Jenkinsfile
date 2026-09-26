@@ -13,38 +13,13 @@ pipeline {
 
     stages {
 
-        stage('Clean Workspace') {
-            steps {
-                cleanWs()
-            }
-        }
-
-        stage('Checkout from Git') {
-            steps {
-                git(
-                    branch: 'master',
-                    credentialsId: 'github-swiggy-deploy',
-                    url: 'git@github.com:itsyogessh/swiggy-app.git'
-                )
-            }
-        }
-
         stage('Verify Tools') {
             steps {
                 sh '''
-                    echo "===== JAVA ====="
                     java -version
-
-                    echo "===== NODE ====="
                     node -v
-
-                    echo "===== NPM ====="
                     npm -v
-
-                    echo "===== SONAR SCANNER ====="
                     $SCANNER_HOME/bin/sonar-scanner --version
-
-                    echo "===== DOCKER ====="
                     docker --version
                 '''
             }
@@ -64,7 +39,6 @@ pipeline {
             }
         }
 
-
         stage('Quality Gate') {
             steps {
                 script {
@@ -77,17 +51,13 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh '''
-                    npm install
-                '''
+                sh 'npm install'
             }
         }
 
         stage('Build React App') {
             steps {
-                sh '''
-                    npm run build
-                '''
+                sh 'npm run build'
             }
         }
 
@@ -162,7 +132,6 @@ pipeline {
             steps {
                 sh '''
                     docker rm -f swiggy || true
-
                     docker run -d \
                     --name swiggy \
                     -p 3000:3000 \
@@ -174,15 +143,15 @@ pipeline {
 
     post {
         always {
-            echo "Pipeline execution completed!"
+            echo 'Pipeline execution completed!'
         }
 
         failure {
-            echo "Pipeline failed. Check logs for details."
+            echo 'Pipeline failed. Check logs for details.'
         }
 
         success {
-            echo "Swiggy App deployed successfully!"
+            echo 'Swiggy App deployed successfully!'
         }
     }
 }
