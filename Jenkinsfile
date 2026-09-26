@@ -57,11 +57,13 @@ pipeline {
                         $SCANNER_HOME/bin/sonar-scanner \
                         -Dsonar.projectKey=Swiggy \
                         -Dsonar.projectName=Swiggy \
-                        -Dsonar.sources=.
+                        -Dsonar.sources=src \
+                        -Dsonar.exclusions=node_modules/**,dist/**,dist-ssr/**
                     '''
                 }
             }
         }
+
 
         stage('Quality Gate') {
             steps {
